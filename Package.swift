@@ -8,7 +8,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
-        .package(url: "https://github.com/hmlongco/Resolver", "1.0.0" ..< "2.0.0")
+        .package(url: "https://github.com/hmlongco/Resolver.git", "1.0.0" ..< "2.0.0"),
+        .package(url: "https://github.com/vapor/postgres-kit.git", "2.0.0" ..< "3.0.0")
     ],
     targets: [
         .target(name: "Interface"),
@@ -17,6 +18,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "Resolver", package: "Resolver"),
+                .product(name: "PostgresKit", package: "postgres-kit"),
                 .target(name: "Interface")
             ],
             swiftSettings: [
