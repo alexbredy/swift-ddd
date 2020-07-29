@@ -2,17 +2,9 @@ import Foundation
 
 
 struct TrackId: Hashable {
-    let value: UUID
-
-    var description: String {
-        return value.uuidString
-    }
-
-    init(_ value: UUID = UUID()) {
-        self.value = value
-    }
+    let value: String
 
     init(_ value: String) {
-        self.value = UUID(uuidString: value)!
+        self.value = value
     }
 }

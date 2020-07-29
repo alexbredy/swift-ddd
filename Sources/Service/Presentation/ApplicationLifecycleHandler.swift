@@ -2,7 +2,7 @@ import Foundation
 import Vapor
 
 
-class ServiceLifecycleHandler: LifecycleHandler {
+class ApplicationLifecycleHandler: LifecycleHandler {
 
     typealias ShutdownHandler = () -> Void
 

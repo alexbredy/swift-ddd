@@ -4,6 +4,10 @@ import Foundation
 class TrackRepositoryInMemory: TrackRepository {
     private var tracks: [Track] = []
 
+    func nextId() -> TrackId {
+        return TrackId(UUID().uuidString)
+    }
+
     func findById(_ id: TrackId) throws -> Track? {
         return tracks.filter { $0.id == id }.first
     }

@@ -4,16 +4,20 @@ import PostgresKit
 
 class TrackRepositoryPostgreSql: TrackRepository {
 
-    private let database: PostgresDatabase
+    private let client: PostgresDatabase
 
-    init(database: PostgresDatabase) {
-        self.database = database
+    init(client: PostgresDatabase) {
+        self.client = client
+    }
+
+    func nextId() -> TrackId {
+        return TrackId(UUID().uuidString)
     }
 
     func findById(_ id: TrackId) throws -> Track? {
-        let result = try database.query(
+        let result = try client.query(
             "SELECT * FROM tracks WHERE id = $1",
-            [PostgresData(string: id.value.uuidString)]
+            [PostgresData(string: id.value)]
         ).wait()
 
         guard let row = result.first else {
@@ -24,9 +28,9 @@ class TrackRepositoryPostgreSql: TrackRepository {
     }
 
     func list(for profileId: ProfileId) throws -> [Track] {
-        let result = try database.query(
+        let result = try client.query(
             "SELECT * FROM tracks WHERE owned_by = $1",
-            [PostgresData(string: profileId.value.uuidString)]
+            [PostgresData(string: profileId.value)]
         ).wait()
 
         return result.map { makeTrack(from: $0) }
