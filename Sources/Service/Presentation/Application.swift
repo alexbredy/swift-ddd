@@ -4,6 +4,7 @@ import Resolver
 
 public extension Application {
     func configure() throws {
+        // TODO: Handle dynamic config (env vars, flags, etc)
         let lifecycleHandler = ApplicationLifecycleHandler()
 
         lifecycle.use(lifecycleHandler)
@@ -14,7 +15,7 @@ public extension Application {
         try registerRoutes()
     }
 
-    private func registerRoutes() throws {
+    private func registerRoutes() throws {  
         let tracksController = TracksController(
             addTrackUseCase: Resolver.resolve(),
             getOneTrackUseCase: Resolver.resolve(),

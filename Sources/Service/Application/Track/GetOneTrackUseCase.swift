@@ -2,14 +2,24 @@ import Foundation
 
 
 struct GetOneTrackUseCase {
-
     private let trackRepository: TrackRepository
+    private let profileAuthorizationService: ProfileAuthorizationService
 
-    init(trackRepository: TrackRepository) {
+    init(
+        trackRepository: TrackRepository,
+        profileAuthorizationService: ProfileAuthorizationService = ProfileAuthorizationService()
+    ) {
         self.trackRepository = trackRepository
+        self.profileAuthorizationService = profileAuthorizationService
     }
 
-    func execute<T>(profileId: String, trackId: String, transformer: (Track) -> T) throws -> T {
+    func execute<T>(
+        sessionProfileId: String,
+        profileId: String,
+        trackId: String, transformer: (Track) -> T
+    ) throws -> T {
+        try profileAuthorizationService.validateAccess(for: sessionProfileId, on: profileId)
+
         let profileId = ProfileId(profileId)
         let trackId = TrackId(trackId)
 

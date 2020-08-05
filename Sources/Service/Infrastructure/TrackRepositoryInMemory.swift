@@ -5,15 +5,15 @@ class TrackRepositoryInMemory: TrackRepository {
     private var tracks: [Track] = []
 
     func nextId() -> TrackId {
-        return TrackId(UUID().uuidString)
+        TrackId(UUID().uuidString)
     }
 
     func findById(_ id: TrackId) throws -> Track? {
-        return tracks.filter { $0.id == id }.first
+        tracks.filter { $0.id == id }.first
     }
 
     func list(for profileId: ProfileId) throws -> [Track] {
-        return tracks
+        tracks
             .filter { $0.ownedBy == profileId }
             .sorted { $0.createdOn > $1.createdOn }
     }

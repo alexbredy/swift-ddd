@@ -2,7 +2,7 @@ import Foundation
 
 
 public struct AddTrackCommand: Codable {
-    let title: String
-    let comment: String
-    let score: Int
+    public let title: String
+    public let comment: String
+    public let score: Int
 }

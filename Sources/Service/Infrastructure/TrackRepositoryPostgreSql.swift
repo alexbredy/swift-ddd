@@ -3,7 +3,6 @@ import PostgresKit
 
 
 class TrackRepositoryPostgreSql: TrackRepository {
-
     private let client: PostgresDatabase
 
     init(client: PostgresDatabase) {
@@ -11,7 +10,7 @@ class TrackRepositoryPostgreSql: TrackRepository {
     }
 
     func nextId() -> TrackId {
-        return TrackId(UUID().uuidString)
+        TrackId(UUID().uuidString)
     }
 
     func findById(_ id: TrackId) throws -> Track? {
@@ -37,6 +36,7 @@ class TrackRepositoryPostgreSql: TrackRepository {
     }
 
     func save(_ track: Track) throws -> Track {
+        // TODO: Complete implementation
 //        let result = try database.query(
 //            "INSERT INTO",
 //            [PostgresData]

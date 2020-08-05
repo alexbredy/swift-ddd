@@ -29,6 +29,38 @@ struct RepositoryConfiguration {
         }
     }
 
+    private static func registerSessionRepository(
+        app: Application,
+        lifecycleHandler: ApplicationLifecycleHandler
+    ) {
+        switch app.environment {
+        case .development, .testing:
+            Resolver.register {
+                SessionRepositoryInMemory()
+            }.implements(TrackRepository.self).scope(Resolver.application)
+        case .production:
+            fatalError("Implement this")
+        default:
+            fatalError("The environment is invalid")
+        }
+    }
+
+    private static func registerProfileRepository(
+        app: Application,
+        lifecycleHandler: ApplicationLifecycleHandler
+    ) {
+        switch app.environment {
+        case .development, .testing:
+            Resolver.register {
+                ProfileRepositoryInMemory()
+            }.implements(TrackRepository.self).scope(Resolver.application)
+        case .production:
+            fatalError("Implement this")
+        default:
+            fatalError("The environment is invalid")
+        }
+    }
+
     private static func makePostgresClient(
         app: Application,
         lifecycleHandler: ApplicationLifecycleHandler

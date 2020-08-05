@@ -4,8 +4,11 @@ import Resolver
 import Interface
 
 
-struct TracksController: RouteCollection {
+extension AddTrackCommand: Content {}
+extension TrackDto: Content {}
 
+
+struct TracksController: RouteCollection {
     private let addTrackUseCase: AddTrackUseCase
     private let getOneTrackUseCase: GetOneTrackUseCase
     private let listTracksUseCase: ListTracksUseCase
@@ -21,49 +24,49 @@ struct TracksController: RouteCollection {
     }
 
     func boot(routes: RoutesBuilder) throws {
-        let v1 = routes.grouped("v1", "profiles", ":profileId")
+        let v1 = routes
+            .grouped("v1", "profiles", ":profileId", "tracks")
+            .grouped(Authenticated())
 
-        v1.get("tracks", use: listTracks)
-        v1.get("tracks", ":trackId", use: listTracks)
-        v1.post("tracks", use: addTrack)
+        v1.get(use: listTracks)
+        v1.get(":trackId", use: listTracks)
+        v1.post(use: addTrack)
     }
 
     func getOne(_ request: Request) throws -> TrackDto {
+        let sessionProfileId = try request.auth.require(SessionDto.self).profileId
         let profileId = request.parameters.get("profileId")!
         let trackId = request.parameters.get("trackId")!
 
-        return try getOneTrackUseCase.execute(profileId: profileId, trackId: trackId) { $0.toDto() }
+        return try getOneTrackUseCase.execute(
+            sessionProfileId: sessionProfileId,
+            profileId: profileId,
+            trackId: trackId,
+            transformer: TrackTransformer.toDto(_:)
+        )
     }
 
     func listTracks(_ request: Request) throws -> [TrackDto] {
+        let sessionProfileId = try request.auth.require(SessionDto.self).profileId
         let profileId = request.parameters.get("profileId")!
 
-        return try listTracksUseCase.execute(profileId: profileId) { $0.toDto() }
+        return try listTracksUseCase.execute(
+            sessionProfileId: sessionProfileId,
+            profileId: profileId,
+            transformer: TrackTransformer.toDto(_:)
+        )
     }
 
     func addTrack(_ request: Request) throws -> TrackDto {
+        let sessionProfileId = try request.auth.require(SessionDto.self).profileId
         let profileId = request.parameters.get("profileId")!
         let command = try request.content.decode(AddTrackCommand.self)
 
-        return try addTrackUseCase.execute(profileId: profileId, command: command) { $0.toDto() }
-    }
-}
-
-extension Track {
-    func toDto() -> TrackDto {
-        return TrackDto(
-            id: id.value,
-            ownedBy: ownedBy.value,
-            title: title.value,
-            comment: comment.value,
-            score: score.value,
-            createdOn: createdOn
+        return try addTrackUseCase.execute(
+            sessionProfileId: sessionProfileId,
+            profileId: profileId,
+            command: command,
+            transformer: TrackTransformer.toDto(_:)
         )
     }
-}
-
-extension TrackDto: Content {
-}
-
-extension AddTrackCommand: Content {
 }
