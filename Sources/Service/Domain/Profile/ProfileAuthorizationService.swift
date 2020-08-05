@@ -2,7 +2,7 @@ import Foundation
 
 
 struct ProfileAuthorizationService {
-    func validateAccess(for sessionProfileId: String, on requestedProfileId: String) throws {
+    func validateAccess(for sessionProfileId: ProfileId, on requestedProfileId: ProfileId) throws {
         if sessionProfileId != requestedProfileId {
             throw UnauthorizedError(message: "Unauthorized access to profile \(requestedProfileId)")
         }

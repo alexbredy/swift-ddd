@@ -7,6 +7,8 @@ import PostgresKit
 struct RepositoryConfiguration {
     static func registerRepositories(app: Application, lifecycleHandler: ApplicationLifecycleHandler) {
         registerTrackRepository(app: app, lifecycleHandler: lifecycleHandler)
+        registerProfileRepository(app: app, lifecycleHandler: lifecycleHandler)
+        registerSessionRepository(app: app, lifecycleHandler: lifecycleHandler)
     }
 
     private static func registerTrackRepository(
@@ -37,7 +39,7 @@ struct RepositoryConfiguration {
         case .development, .testing:
             Resolver.register {
                 SessionRepositoryInMemory()
-            }.implements(TrackRepository.self).scope(Resolver.application)
+            }.implements(SessionRepository.self).scope(Resolver.application)
         case .production:
             fatalError("Implement this")
         default:
@@ -53,7 +55,7 @@ struct RepositoryConfiguration {
         case .development, .testing:
             Resolver.register {
                 ProfileRepositoryInMemory()
-            }.implements(TrackRepository.self).scope(Resolver.application)
+            }.implements(ProfileRepository.self).scope(Resolver.application)
         case .production:
             fatalError("Implement this")
         default:

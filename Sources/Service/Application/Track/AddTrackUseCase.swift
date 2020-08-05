@@ -20,7 +20,10 @@ struct AddTrackUseCase {
         command: AddTrackCommand,
         transformer: (Track) -> T
     ) throws -> T {
-        try profileAuthorizationService.validateAccess(for: sessionProfileId, on: profileId)
+        try profileAuthorizationService.validateAccess(
+            for: ProfileId(sessionProfileId),
+            on: ProfileId(profileId)
+        )
 
         let track = Track(
             id: trackRepository.nextId(),

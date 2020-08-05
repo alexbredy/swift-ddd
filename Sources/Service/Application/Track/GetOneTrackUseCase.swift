@@ -18,7 +18,10 @@ struct GetOneTrackUseCase {
         profileId: String,
         trackId: String, transformer: (Track) -> T
     ) throws -> T {
-        try profileAuthorizationService.validateAccess(for: sessionProfileId, on: profileId)
+        try profileAuthorizationService.validateAccess(
+            for: ProfileId(sessionProfileId),
+            on: ProfileId(profileId)
+        )
 
         let profileId = ProfileId(profileId)
         let trackId = TrackId(trackId)
