@@ -31,10 +31,6 @@ struct Authenticated: BearerAuthenticator {
             return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
         }
 
-        guard session.expiresOn <= Date() else {
-            return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
-        }
-
         request.auth.login(session)
         return request.eventLoop.makeSucceededFuture(())
     }

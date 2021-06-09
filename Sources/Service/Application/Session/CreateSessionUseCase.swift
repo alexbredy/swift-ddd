@@ -6,16 +6,13 @@ struct CreateSessionUseCase {
 
     private let sessionRepository: SessionRepository
     private let profileRepository: ProfileRepository
-    private let calendar: Calendar
 
     init(
         sessionRepository: SessionRepository,
-        profileRepository: ProfileRepository,
-        calendar: Calendar = Calendar.current
+        profileRepository: ProfileRepository
     ) {
         self.sessionRepository = sessionRepository
         self.profileRepository = profileRepository
-        self.calendar = calendar
     }
 
     //No auth required to create a Session for the sake of simplicity in this project
@@ -28,19 +25,11 @@ struct CreateSessionUseCase {
 
         let session = Session(
             token: sessionRepository.nextToken(),
-            profileId: profile.id,
-            expiresOn: makeSessionExpiryDate()
+            profileId: profile.id
         )
 
         let savedSession = try sessionRepository.save(session)
 
         return transformer(savedSession)
-    }
-
-    private func makeSessionExpiryDate() -> Date {
-        var days    = DateComponents()
-        days.day    = CreateSessionUseCase.sessionLifetimeInDays
-
-        return calendar.date(byAdding: days, to: Date())!
     }
 }
